@@ -1,5 +1,11 @@
 package com.leap.stuff;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.FingerList;
@@ -55,10 +61,31 @@ public class LeapListener extends Listener
 		// Get the most recent frame and report some basic information
 		Frame frame = controller.frame();
 		FingerList fingerList=frame.fingers();
-		Finger finger1 = fingerList.get(0);
-		Finger finger2=fingerList.get(1);
-		System.out.println("Finger "+ finger1.id() +" Coordinate: "+finger1.tipPosition());
-		System.out.println("Finger "+ finger2.id() +" Coordinate: "+finger2.tipPosition());
+		if(fingerList.isEmpty()){
+			return;
+		}
+		List<Finger> fingers= new ArrayList<Finger>();
+		Iterator<Finger> iterator=fingerList.iterator();
+		
+		while(iterator.hasNext())
+		{
+			fingers.add(iterator.next());
+		}
+		
+		Comparator<Finger> fingerComparator= new Comparator<Finger>()
+		{
+
+			@Override
+			public int compare(Finger finger1, Finger finger2)
+			{
+				return (int) (Math.round(finger1.tipPosition().getZ() - finger2.tipPosition().getZ()));
+			}
+		};
+		
+		Collections.sort(fingers, fingerComparator);
+		
+		System.out.println("Finger: "+fingers.get(0).id()+ " position: "+fingers.get(0).tipPosition() );
+		System.out.println("Finger: "+fingers.get(1).id()+ " position: "+fingers.get(1).tipPosition() );
 	}
 
 }
