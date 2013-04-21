@@ -10,6 +10,7 @@ import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.FingerList;
 import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Gesture.Type;
 import com.leapmotion.leap.Listener;
 
 public class LeapListener extends Listener
@@ -57,11 +58,11 @@ public class LeapListener extends Listener
 	public void onFrame(Controller controller)
 	{
 		super.onFrame(controller);
-		System.out.println("onFrame");
-		// Get the most recent frame and report some basic information
 		Frame frame = controller.frame();
 		FingerList fingerList=frame.fingers();
+		System.out.println(frame.gestures().count());
 		if(fingerList.isEmpty()){
+			System.out.println("empty finger list");
 			return;
 		}
 		List<Finger> fingers= new ArrayList<Finger>();
@@ -82,10 +83,19 @@ public class LeapListener extends Listener
 		};
 
 		Collections.sort(fingers, fingerComparator);
-		if(fingers.size()>=2)
+		if(fingers.size()==2)
 		{
 			System.out.println("Finger: "+fingers.get(fingers.size()-1).id()+ " position: "+fingers.get(0).tipPosition() );
 			System.out.println("Finger: "+fingers.get(fingers.size()-2).id()+ " position: "+fingers.get(1).tipPosition() );
+			System.out.println("Difference in x axis: "+ Math.abs((fingers.get(fingers.size()-1).tipPosition().getX()-fingers.get(fingers.size()-2).tipPosition().getX())));
+		}
+		else if( fingers.size()==1 )
+		{
+			System.out.println("Single finger");
+		}
+		else
+		{
+			//System.out.println(fingers.size());
 		}
 	}
 
