@@ -12,10 +12,10 @@ public class RobotArmState
 	
 	public final int minFramesToCloseArm=10;
 	public final int minFramesToOpenArm=10;
-	public final int minFramesToMoveArmForward=10;
-	public final int minFramesToMoveArmBackwards=10;
-	public final int minFramesToMoveArmLeft=10;
-	public final int minFramesToMoveArmRight=10;
+	public final int minFramesToMoveArmForward=20;
+	public final int minFramesToMoveArmBackwards=20;
+	public final int minFramesToMoveArmLeft=20;
+	public final int minFramesToMoveArmRight=20;
 	
 	private int closeThresholdFrameCount;
 	private int openThresholdFrameCount;

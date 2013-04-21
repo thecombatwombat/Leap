@@ -117,7 +117,7 @@ public class LeapListener extends Listener
 					robotArmState.resetForwardFrameCount();
 				}
 			}
-			if(zAxisFingerPosition>robotArmState.armBackwardThreshold)
+			else if(zAxisFingerPosition>robotArmState.armBackwardThreshold)
 			{
 				robotArmState.addBackwardsFrame();
 				if(robotArmState.getBackwardsThresholdFrameCount()>robotArmState.minFramesToMoveArmBackwards)
@@ -136,7 +136,7 @@ public class LeapListener extends Listener
 					robotArmState.resetLeftFrameCount();
 				}
 			}
-			if(xAxisFingerPosition>robotArmState.armRightThreshold)
+			else if(xAxisFingerPosition>robotArmState.armRightThreshold)
 			{
 				robotArmState.addRightFrame();
 				if(robotArmState.getRightThresholdFrameCount()>robotArmState.minFramesToMoveArmRight)
