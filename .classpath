@@ -7,5 +7,11 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/architjoshi/Software/Leap Motion/LeapSDK/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Users/architjoshi/Documents/workspace/google-gson-2.2.3/gson-2.2.3.jar" sourcepath="/Users/architjoshi/Documents/workspace/google-gson-2.2.3/gson-2.2.3-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/Users/architjoshi/Documents/workspace/google-gson-2.2.3/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/Users/architjoshi/Documents/workspace/socket.io-java-client/jar/socketio.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

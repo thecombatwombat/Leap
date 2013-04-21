@@ -10,8 +10,8 @@ public class RobotArmState
 	public final float armLeftThreshold= -50.00f;
 	public final float armRightThreshold= 50.00f;
 	
-	public final int minFramesToCloseArm=10;
-	public final int minFramesToOpenArm=10;
+	public final int minFramesToCloseArm=1;
+	public final int minFramesToOpenArm=1;
 	public final int minFramesToMoveArmForward=20;
 	public final int minFramesToMoveArmBackwards=20;
 	public final int minFramesToMoveArmLeft=20;

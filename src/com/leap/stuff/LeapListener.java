@@ -1,5 +1,7 @@
 package com.leap.stuff;
 
+import io.socket.SocketIO;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,9 +17,11 @@ import com.leapmotion.leap.Listener;
 public class LeapListener extends Listener
 {
 	private RobotArmState robotArmState;
-	public LeapListener()
+	private SocketIO socket;
+	public LeapListener(SocketIO socket)
 	{
 		this.robotArmState=new RobotArmState();
+		this.socket=socket;
 	}
 
 	@Override
@@ -46,6 +50,7 @@ public class LeapListener extends Listener
 	{
 		super.onExit(controller);
 		System.out.println("onExit");
+		//socket.disconnect();
 	}
 
 	@Override
@@ -89,6 +94,12 @@ public class LeapListener extends Listener
 				if(robotArmState.getCloseThresholdFrameCount()>robotArmState.minFramesToCloseArm)
 				{
 					System.out.println("Close Arm!");
+					synchronized (socket)
+					{
+						socket.send("Close Arm!");
+					}
+					
+					
 					robotArmState.resetOpenFrames();
 				}
 			}
@@ -98,6 +109,7 @@ public class LeapListener extends Listener
 				if(robotArmState.getOpenThresholdFrameCount()>robotArmState.minFramesToOpenArm)
 				{
 					System.out.println("Open Arm!");
+					socket.send("Open Arm!");
 					robotArmState.resetClosedFrames();
 				}
 			}
@@ -114,6 +126,7 @@ public class LeapListener extends Listener
 				if(robotArmState.getForwardThresholdFrameCount()>robotArmState.minFramesToMoveArmForward)
 				{
 					System.out.println("Move forward: "+zAxisFingerPosition);
+					socket.send("Move forward: "+zAxisFingerPosition);
 					robotArmState.resetForwardFrameCount();
 				}
 			}
@@ -123,6 +136,7 @@ public class LeapListener extends Listener
 				if(robotArmState.getBackwardsThresholdFrameCount()>robotArmState.minFramesToMoveArmBackwards)
 				{
 					System.out.println("Move back: "+zAxisFingerPosition);
+					socket.send("Move back: "+zAxisFingerPosition);
 					robotArmState.resetBackwardsFrameCount();
 				}
 			}
@@ -133,6 +147,7 @@ public class LeapListener extends Listener
 				if(robotArmState.getLeftThresholdFrameCount()>robotArmState.minFramesToMoveArmLeft)
 				{
 					System.out.println("Move left: "+xAxisFingerPosition);
+					socket.send("Move left: "+xAxisFingerPosition);
 					robotArmState.resetLeftFrameCount();
 				}
 			}
@@ -142,6 +157,7 @@ public class LeapListener extends Listener
 				if(robotArmState.getRightThresholdFrameCount()>robotArmState.minFramesToMoveArmRight)
 				{
 					System.out.println("Move right: "+xAxisFingerPosition);
+					socket.send("Move right: "+xAxisFingerPosition);
 					robotArmState.resetRightFrameCount();
 				}
 			}
@@ -149,6 +165,7 @@ public class LeapListener extends Listener
 		else if (fingers.size()==5)
 		{
 			System.out.println("Stop!");
+			socket.send("Stop!");
 			robotArmState.resetClosedFrames();
 			robotArmState.resetOpenFrames();
 		}
