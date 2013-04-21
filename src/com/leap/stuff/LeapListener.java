@@ -10,20 +10,14 @@ import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.FingerList;
 import com.leapmotion.leap.Frame;
-import com.leapmotion.leap.Gesture.Type;
 import com.leapmotion.leap.Listener;
 
 public class LeapListener extends Listener
 {
-
+	private RobotArmState robotArmState;
 	public LeapListener()
 	{
-		super();
-	}
-
-	public LeapListener(long arg0, boolean arg1)
-	{
-		super(arg0, arg1);
+		this.robotArmState=new RobotArmState();
 	}
 
 	@Override
@@ -85,17 +79,40 @@ public class LeapListener extends Listener
 		Collections.sort(fingers, fingerComparator);
 		if(fingers.size()==2)
 		{
-			System.out.println("Finger: "+fingers.get(fingers.size()-1).id()+ " position: "+fingers.get(0).tipPosition() );
-			System.out.println("Finger: "+fingers.get(fingers.size()-2).id()+ " position: "+fingers.get(1).tipPosition() );
-			System.out.println("Difference in x axis: "+ Math.abs((fingers.get(fingers.size()-1).tipPosition().getX()-fingers.get(fingers.size()-2).tipPosition().getX())));
+			//System.out.println("Finger: "+fingers.get(fingers.size()-1).id()+ " position: "+fingers.get(0).tipPosition() );
+			//System.out.println("Finger: "+fingers.get(fingers.size()-2).id()+ " position: "+fingers.get(1).tipPosition() );
+			float xAxisFingerDistance=Math.abs((fingers.get(fingers.size()-1).tipPosition().getX()-fingers.get(fingers.size()-2).tipPosition().getX()));
+			System.out.println("Difference in x axis: "+xAxisFingerDistance);
+			
+			if(xAxisFingerDistance<robotArmState.armCloseThreshold)
+			{
+				robotArmState.addCloseFrame();
+				if(robotArmState.getCloseThresholdFrameCount()>robotArmState.minFramesToCloseArm)
+				{
+					System.out.println("Close Arm!");
+					robotArmState.resetOpenFrames();
+				}
+			}
+			else if(xAxisFingerDistance>robotArmState.armOpenThreshold)
+			{
+				robotArmState.addOpenFrame();
+				if(robotArmState.getOpenThresholdFrameCount()>robotArmState.minFramesToOpenArm)
+				{
+					System.out.println("Open Arm!");
+					robotArmState.resetClosedFrames();
+				}
+			}
+		
 		}
 		else if( fingers.size()==1 )
 		{
 			System.out.println("Single finger");
 		}
-		else
+		else if (fingers.size()==5)
 		{
-			//System.out.println(fingers.size());
+			System.out.println("Stop!");
+			robotArmState.resetClosedFrames();
+			robotArmState.resetOpenFrames();
 		}
 	}
 
