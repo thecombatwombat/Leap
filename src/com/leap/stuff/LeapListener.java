@@ -54,7 +54,6 @@ public class LeapListener extends Listener
 		super.onFrame(controller);
 		Frame frame = controller.frame();
 		FingerList fingerList=frame.fingers();
-		System.out.println(frame.gestures().count());
 		if(fingerList.isEmpty()){
 			System.out.println("empty finger list");
 			return;
@@ -81,7 +80,7 @@ public class LeapListener extends Listener
 		{
 			//System.out.println("Finger: "+fingers.get(fingers.size()-1).id()+ " position: "+fingers.get(0).tipPosition() );
 			//System.out.println("Finger: "+fingers.get(fingers.size()-2).id()+ " position: "+fingers.get(1).tipPosition() );
-			float xAxisFingerDistance=Math.abs((fingers.get(fingers.size()-1).tipPosition().getX()-fingers.get(fingers.size()-2).tipPosition().getX()));
+			float xAxisFingerDistance=Math.abs((fingers.get(0).tipPosition().getX()-fingers.get(1).tipPosition().getX()));
 			System.out.println("Difference in x axis: "+xAxisFingerDistance);
 			
 			if(xAxisFingerDistance<robotArmState.armCloseThreshold)
@@ -106,7 +105,46 @@ public class LeapListener extends Listener
 		}
 		else if( fingers.size()==1 )
 		{
-			System.out.println("Single finger");
+			float zAxisFingerPosition=fingers.get(0).tipPosition().getZ();
+			float xAxisFingerPosition=fingers.get(0).tipPosition().getX();
+			
+			if(zAxisFingerPosition<robotArmState.armForwardThreshold) //As you move forward, the Z value decreases
+			{
+				robotArmState.addForwardFrame();
+				if(robotArmState.getForwardThresholdFrameCount()>robotArmState.minFramesToMoveArmForward)
+				{
+					System.out.println("Move forward: "+zAxisFingerPosition);
+					robotArmState.resetForwardFrameCount();
+				}
+			}
+			if(zAxisFingerPosition>robotArmState.armBackwardThreshold)
+			{
+				robotArmState.addBackwardsFrame();
+				if(robotArmState.getBackwardsThresholdFrameCount()>robotArmState.minFramesToMoveArmBackwards)
+				{
+					System.out.println("Move back: "+zAxisFingerPosition);
+					robotArmState.resetBackwardsFrameCount();
+				}
+			}
+			
+			if(xAxisFingerPosition<robotArmState.armLeftThreshold)
+			{
+				robotArmState.addLeftFrame();
+				if(robotArmState.getLeftThresholdFrameCount()>robotArmState.minFramesToMoveArmLeft)
+				{
+					System.out.println("Move left: "+xAxisFingerPosition);
+					robotArmState.resetLeftFrameCount();
+				}
+			}
+			if(xAxisFingerPosition>robotArmState.armRightThreshold)
+			{
+				robotArmState.addRightFrame();
+				if(robotArmState.getRightThresholdFrameCount()>robotArmState.minFramesToMoveArmRight)
+				{
+					System.out.println("Move right: "+xAxisFingerPosition);
+					robotArmState.resetRightFrameCount();
+				}
+			}
 		}
 		else if (fingers.size()==5)
 		{
