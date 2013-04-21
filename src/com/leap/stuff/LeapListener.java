@@ -24,35 +24,35 @@ public class LeapListener extends Listener
 	{
 		super(arg0, arg1);
 	}
-	
+
 	@Override
 	public void onInit(Controller controller)
 	{
 		super.onInit(controller);
 		System.out.println("onInit");
 	}
-	
+
 	@Override
 	public void onConnect(Controller controller)
 	{
 		super.onConnect(controller);
 		System.out.println("onConnect");
 	}
-	
+
 	@Override
 	public void onDisconnect(Controller controller)
 	{
 		super.onDisconnect(controller);
 		System.out.println("onDisconnect");
 	}
-	
+
 	@Override
 	public void onExit(Controller controller)
 	{
 		super.onExit(controller);
 		System.out.println("onExit");
 	}
-	
+
 	@Override
 	public void onFrame(Controller controller)
 	{
@@ -66,14 +66,13 @@ public class LeapListener extends Listener
 		}
 		List<Finger> fingers= new ArrayList<Finger>();
 		Iterator<Finger> iterator=fingerList.iterator();
-		
+
 		while(iterator.hasNext())
 		{
 			fingers.add(iterator.next());
 		}
-		
-		Comparator<Finger> fingerComparator= new Comparator<Finger>()
-		{
+
+		Comparator<Finger> fingerComparator= new Comparator<Finger>(){
 
 			@Override
 			public int compare(Finger finger1, Finger finger2)
@@ -81,11 +80,13 @@ public class LeapListener extends Listener
 				return (int) (Math.round(finger1.tipPosition().getZ() - finger2.tipPosition().getZ()));
 			}
 		};
-		
+
 		Collections.sort(fingers, fingerComparator);
-		
-		System.out.println("Finger: "+fingers.get(0).id()+ " position: "+fingers.get(0).tipPosition() );
-		System.out.println("Finger: "+fingers.get(1).id()+ " position: "+fingers.get(1).tipPosition() );
+		if(fingers.size()>=2)
+		{
+			System.out.println("Finger: "+fingers.get(fingers.size()-1).id()+ " position: "+fingers.get(0).tipPosition() );
+			System.out.println("Finger: "+fingers.get(fingers.size()-2).id()+ " position: "+fingers.get(1).tipPosition() );
+		}
 	}
 
 }
